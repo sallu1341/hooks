@@ -1,9 +1,31 @@
 import React, { useState } from "react";
-import { change, work } from "./index";
-import { Container, Button, Modal, Form } from "react-bootstrap";
+
+import { Container, Button, Modal, Form, Card } from "react-bootstrap";
 const Home = () => {
   const [modalState, changeModalState] = useState(false);
-  const [Formdat, setFormData] = useState({});
+  const [Formdata, setFormData] = useState({});
+  const [submiteState, setSubmitState] = useState(false);
+
+  //new user
+  const NewUser = (data) => {
+    console.log(data);
+    return (
+      <>
+        <Card style={{ width: "18rem" }}>
+          <Card.Body>
+            <Card.Img variant="top" src={data.user.picture} />
+            <Card.Title>{data.user.fullname}</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">
+              {data.user.email}
+            </Card.Subtitle>
+            <Card.Text>{data.user.mobile}</Card.Text>
+            <Card.Text>{data.user.picture}</Card.Text>
+            <Button variant="primary">Click</Button>
+          </Card.Body>
+        </Card>
+      </>
+    );
+  };
 
   // colloection data
   const GetFORMData = (event) => {
@@ -11,11 +33,12 @@ const Home = () => {
     const prop = event.target.name;
     let value = "";
     if (input.type === "file") {
-      value = input.files[0];
+      let newFile = input.files[0];
+      value = URL.createObjectURL(newFile);
     } else {
       value = input.value;
     }
-    return (setFormData = (oldData) => {
+    setFormData((oldData) => {
       return {
         ...oldData,
         [prop]: value,
@@ -23,9 +46,11 @@ const Home = () => {
     });
   };
 
+  //adduser
   const AddUser = (e) => {
     e.preventDefault();
-    console.log(Formdat);
+    console.log(Formdata);
+    return setSubmitState(true), changeModalState(false);
   };
 
   return (
@@ -80,6 +105,7 @@ const Home = () => {
             </Form>
           </Modal.Body>
         </Modal>
+        {submiteState ? <NewUser user={Formdata} /> : null}
       </Container>
     </>
   );
